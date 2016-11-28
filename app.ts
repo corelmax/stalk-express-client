@@ -9,7 +9,11 @@ global.window = global;
 global.rootRequire = function (name) {
   return require(__dirname + '/' + name);
 }
-import ServerImp, { IDictionary } from "./src/stalk/serverImplemented";
+
+/// original WebSocket.
+/// https://github.com/websockets/ws
+/// https://davidwalsh.name/websocket
+import * as StalkFactory from "./src/stalkFactory";
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -49,25 +53,6 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-/// original WebSocket.
-/// https://github.com/websockets/ws
-/// https://davidwalsh.name/websocket
-
-const stalk = ServerImp.getInstance();
-stalk.init((err, result) => {
-  if (err) {
-    console.error("init stalk fail: ", err);
-    return;
-  }
-
-  console.log("Stalk init success.");
-
-  let msg = {};
-  msg["message"] = "test send message from express.js";
-  msg["timestamp"] = new Date();
-  stalk.getClient().request("push.pushHandler.push", msg, (result) => {
-    console.log("request success", result);
-  });
-});
+StalkFactory.init();
 
 module.exports = app;

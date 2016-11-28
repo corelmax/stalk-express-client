@@ -9,7 +9,10 @@ global.window = global;
 global.rootRequire = function (name) {
     return require(__dirname + '/' + name);
 };
-var serverImplemented_1 = require("./src/stalk/serverImplemented");
+/// original WebSocket.
+/// https://github.com/websockets/ws
+/// https://davidwalsh.name/websocket
+var StalkFactory = require("./src/stalkFactory");
 var index = require('./routes/index');
 var users = require('./routes/users');
 var app = express();
@@ -40,21 +43,5 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-/// original WebSocket.
-/// https://github.com/websockets/ws
-/// https://davidwalsh.name/websocket
-var stalk = serverImplemented_1.default.getInstance();
-stalk.init(function (err, result) {
-    if (err) {
-        console.error("init stalk fail: ", err);
-        return;
-    }
-    console.log("Stalk init success.");
-    var msg = {};
-    msg["message"] = "test send message from express.js";
-    msg["timestamp"] = new Date();
-    stalk.getClient().request("push.pushHandler.push", msg, function (result) {
-        console.log("request success", result);
-    });
-});
+StalkFactory.init();
 module.exports = app;

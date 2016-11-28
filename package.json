@@ -1,0 +1,24 @@
+{
+  "name": "expressclient",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "./node_modules/nodemon/bin/nodemon.js ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.14.0",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "pomelo-protobuf": "^0.4.0",
+    "pomelo-protocol": "^0.1.6",
+    "serve-favicon": "~2.3.0",
+    "ws": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/ws": "0.0.37",
+    "nodemon": "^1.11.0"
+  }
+}

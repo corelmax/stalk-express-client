@@ -25,6 +25,15 @@ class AuthenData implements IAuthenData {
 export interface IPomeloParam {
     host: string, port: number, reconnect: boolean
 }
+export interface PomeloClient {
+    init(params, cb);
+    notify(route: string, msg: IDictionary);
+    request(route: string, msg: IDictionary, cb);
+    on(event: string, data);
+    setReconnect(_reconnect: boolean);
+    disconnect();
+    removeAllListeners();
+}
 
 export default class ServerImplemented {
     private static Instance: ServerImplemented;
@@ -38,7 +47,7 @@ export default class ServerImplemented {
 
     static connectionProblemString: string = 'Server connection is unstable.';
 
-    pomelo: any;
+    pomelo: PomeloClient;
     host: string;
     port: number | string;
     authenData: AuthenData;

@@ -40,35 +40,21 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-/* original WebSocket.
+/// original WebSocket.
 /// https://github.com/websockets/ws
 /// https://davidwalsh.name/websocket
-const WebSocket = require('ws');
-const ws = new WebSocket('ws://localhost:3050');
-
-ws.on('open', function open() {
-  console.log('connected');
-  ws.send(Date.now().toString(), {mask: true});
-});
-
-ws.on('close', function close() {
-  console.log('disconnected');
-});
-
-ws.on('message', function message(data, flags) {
-  console.log('Roundtrip time: ' + (Date.now() - parseInt(data)) + 'ms', flags);
-
-  setTimeout(function timeout() {
-    ws.send(Date.now().toString(), {mask: true});
-  }, 500);
-});
-*/
 var stalk = serverImplemented_1.default.getInstance();
 stalk.init(function (err, result) {
     if (err) {
         console.error("init stalk fail: ", err);
         return;
     }
-    console.log("init success");
+    console.log("Stalk init success.");
+    var msg = {};
+    msg["message"] = "test send message from express.js";
+    msg["timestamp"] = new Date();
+    stalk.getClient().request("push.pushHandler.push", msg, function (result) {
+        console.log("request success", result);
+    });
 });
 module.exports = app;

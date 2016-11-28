@@ -9,7 +9,7 @@ global.window = global;
 global.rootRequire = function (name) {
   return require(__dirname + '/' + name);
 }
-import ServerImp from "./src/stalk/serverImplemented";
+import ServerImp, { IDictionary } from "./src/stalk/serverImplemented";
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -49,38 +49,25 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-/* original WebSocket.
+/// original WebSocket.
 /// https://github.com/websockets/ws
 /// https://davidwalsh.name/websocket
-const WebSocket = require('ws');
-const ws = new WebSocket('ws://localhost:3050');
-
-ws.on('open', function open() {
-  console.log('connected');
-  ws.send(Date.now().toString(), {mask: true});
-});
-
-ws.on('close', function close() {
-  console.log('disconnected');
-});
-
-ws.on('message', function message(data, flags) {
-  console.log('Roundtrip time: ' + (Date.now() - parseInt(data)) + 'ms', flags);
-
-  setTimeout(function timeout() {
-    ws.send(Date.now().toString(), {mask: true});
-  }, 500);
-});
-*/
 
 const stalk = ServerImp.getInstance();
 stalk.init((err, result) => {
   if (err) {
     console.error("init stalk fail: ", err);
-    return
+    return;
   }
 
-  console.log("init success");
+  console.log("Stalk init success.");
+
+  let msg = {};
+  msg["message"] = "test send message from express.js";
+  msg["timestamp"] = new Date();
+  stalk.getClient().request("push.pushHandler.push", msg, (result) => {
+    console.log("request success", result);
+  });
 });
 
 module.exports = app;

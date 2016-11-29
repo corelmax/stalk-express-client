@@ -18,7 +18,9 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
+    "@types/node": "0.0.0",
     "@types/ws": "0.0.37",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "parse": "^1.9.2"
   }
 }

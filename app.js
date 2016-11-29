@@ -6,9 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 global.window = global;
-global.rootRequire = function (name) {
-    return require(__dirname + '/' + name);
-};
+global._global = __dirname;
 /// original WebSocket.
 /// https://github.com/websockets/ws
 /// https://davidwalsh.name/websocket

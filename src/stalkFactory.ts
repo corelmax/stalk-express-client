@@ -1,4 +1,4 @@
-import ServerImp, { IDictionary } from "./stalk/serverImplemented";
+import ServerImp, { IDictionary } from "./stalk/lib/node/serverImplemented";
 import * as StalkEvent from "./stalkEvents";
 
 const stalk = ServerImp.getInstance();
@@ -17,8 +17,12 @@ export function init() {
         msg["message"] = "test send message from express.js";
         msg["timestamp"] = new Date();
         msg["members"] = ["5825989781f6cb1b5fbb396e", "582425ca0d731841dcf84e56", "582402787db849780682c63f"];
-        stalk.getClient().request("push.pushHandler.push", msg, (result) => {
-            console.log("request success", result);
-        });
+        pushMessage(msg);
+    });
+}
+
+export function pushMessage(msg: IDictionary) {
+    stalk.getClient().request("push.pushHandler.push", msg, (result) => {
+        console.log("request result", result);
     });
 }

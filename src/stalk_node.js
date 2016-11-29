@@ -1,5 +1,5 @@
 "use strict";
-const serverImplemented_1 = require("./stalk/lib/node/serverImplemented");
+const serverImplemented_1 = require("./lib/node/serverImplemented");
 const stalk = serverImplemented_1.default.getInstance();
 function init() {
     return new Promise((resolve, reject) => {

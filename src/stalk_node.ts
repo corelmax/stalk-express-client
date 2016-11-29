@@ -1,5 +1,4 @@
-import ServerImp, { IDictionary } from "./stalk/lib/node/serverImplemented";
-import * as StalkEvent from "./stalkEvents";
+import ServerImp, { IDictionary } from "./lib/node/serverImplemented";
 
 const stalk = ServerImp.getInstance();
 

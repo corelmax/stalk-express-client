@@ -10,7 +10,7 @@ global._global = __dirname;
 /// original WebSocket.
 /// https://github.com/websockets/ws
 /// https://davidwalsh.name/websocket
-var StalkFactory = require("./src/stalkFactory");
+const StalkFactory = require("./src/stalk_node");
 var index = require('./routes/index');
 var users = require('./routes/users');
 var app = express();
@@ -41,5 +41,15 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-StalkFactory.init();
+StalkFactory.init().then(stalk => {
+    if (!stalk._isConnected)
+        return;
+    let msg = {};
+    msg["event"] = "LINK_REQUEST";
+    msg["message"] = "test send message from express.js";
+    msg["timestamp"] = new Date();
+    msg["members"] = ["5825989781f6cb1b5fbb396e", "582425ca0d731841dcf84e56", "582402787db849780682c63f"];
+    StalkFactory.pushMessage(msg);
+}).catch(err => {
+});
 module.exports = app;

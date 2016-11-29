@@ -30,25 +30,25 @@ export default class WebSocketClient {
 }
 */
 "use strict";
-var WebSocket = require('ws');
+const WebSocket = require('ws');
 (function () {
-    var JS_WS_CLIENT_TYPE = 'js-websocket';
-    var JS_WS_CLIENT_VERSION = '0.0.1';
-    var Protocol = require('pomelo-protocol');
-    var protobuf = require('pomelo-protobuf');
-    var decodeIO_protobuf = window.decodeIO_protobuf;
-    var decodeIO_encoder = null;
-    var decodeIO_decoder = null;
-    var Package = Protocol.Package;
-    var Message = Protocol.Message;
-    var EventEmitter = require('./EventEmitter');
-    var rsa = window.rsa;
+    let JS_WS_CLIENT_TYPE = 'js-websocket';
+    let JS_WS_CLIENT_VERSION = '0.0.1';
+    let Protocol = require('pomelo-protocol');
+    let protobuf = require('pomelo-protobuf');
+    let decodeIO_protobuf = window.decodeIO_protobuf;
+    let decodeIO_encoder = null;
+    let decodeIO_decoder = null;
+    let Package = Protocol.Package;
+    let Message = Protocol.Message;
+    let EventEmitter = require('./EventEmitter');
+    let rsa = window.rsa;
     if (typeof (window) != "undefined" && typeof (sys) != 'undefined' && sys.localStorage) {
         window.localStorage = sys.localStorage;
     }
-    var RES_OK = 200;
-    var RES_FAIL = 500;
-    var RES_OLD_CLIENT = 501;
+    let RES_OK = 200;
+    let RES_FAIL = 500;
+    let RES_OLD_CLIENT = 501;
     if (typeof Object.create !== 'function') {
         Object.create = function (o) {
             function F() { }
@@ -56,40 +56,40 @@ var WebSocket = require('ws');
             return new F();
         };
     }
-    var root = window;
-    var pomelo = Object.create(EventEmitter.prototype); // object extend from object
+    let root = window;
+    let pomelo = Object.create(EventEmitter.prototype); // object extend from object
     root.pomelo = pomelo;
-    var socket = null;
-    var reqId = 0;
-    var callbacks = {};
-    var handler = {};
-    var handlers = {};
+    let socket = null;
+    let reqId = 0;
+    let callbacks = {};
+    let handler = {};
+    let handlers = {};
     //Map from request id to route
-    var routeMap = {};
-    var dict = {}; // route string to code
-    var abbrs = {}; // code to route string
-    var serverProtos = {};
-    var clientProtos = {};
-    var protoVersion = 0;
-    var heartbeatInterval = 0;
-    var heartbeatTimeout = 0;
-    var nextHeartbeatTimeout = 0;
-    var gapThreshold = 100; // heartbeat gap threashold
-    var heartbeatId = null;
-    var heartbeatTimeoutId = null;
-    var handshakeCallback = null;
-    var connectParams = null;
-    var decode = null;
-    var encode = null;
-    var reconnect = false;
-    var reconncetTimer = null;
-    var reconnectUrl = null;
-    var reconnectAttempts = 0;
-    var reconnectionDelay = 5000;
-    var maxReconnectAttempts = null;
-    var DEFAULT_MAX_RECONNECT_ATTEMPTS = 10;
-    var useCrypto;
-    var handshakeBuffer = {
+    let routeMap = {};
+    let dict = {}; // route string to code
+    let abbrs = {}; // code to route string
+    let serverProtos = {};
+    let clientProtos = {};
+    let protoVersion = 0;
+    let heartbeatInterval = 0;
+    let heartbeatTimeout = 0;
+    let nextHeartbeatTimeout = 0;
+    let gapThreshold = 100; // heartbeat gap threashold
+    let heartbeatId = null;
+    let heartbeatTimeoutId = null;
+    let handshakeCallback = null;
+    let connectParams = null;
+    let decode = null;
+    let encode = null;
+    let reconnect = false;
+    let reconncetTimer = null;
+    let reconnectUrl = null;
+    let reconnectAttempts = 0;
+    let reconnectionDelay = 5000;
+    let maxReconnectAttempts = null;
+    let DEFAULT_MAX_RECONNECT_ATTEMPTS = 10;
+    let useCrypto;
+    let handshakeBuffer = {
         'sys': {
             type: JS_WS_CLIENT_TYPE,
             version: JS_WS_CLIENT_VERSION,
@@ -97,16 +97,16 @@ var WebSocket = require('ws');
         },
         'user': {}
     };
-    var initCallback = null;
+    let initCallback = null;
     pomelo.init = function (params, cb) {
         initCallback = cb;
         connectParams = params;
-        var host = params.host;
-        var port = params.port;
+        let host = params.host;
+        let port = params.port;
         reconnect = params.reconnect;
         encode = params.encode || defaultEncode;
         decode = params.decode || defaultDecode;
-        var url = "ws://" + host; //'ws://' 
+        let url = "ws://" + host; //'ws://' 
         if (port) {
             url += ':' + port;
         }
@@ -114,7 +114,7 @@ var WebSocket = require('ws');
         if (params.encrypt) {
             useCrypto = true;
             rsa.generate(1024, "10001");
-            var data = {
+            let data = {
                 rsa_n: rsa.n.toString(16),
                 rsa_e: rsa.e
             };
@@ -124,7 +124,7 @@ var WebSocket = require('ws');
         connect(params, url);
     };
     pomelo.disconnect = function () {
-        return new Promise(function (resolve, rejected) {
+        return new Promise((resolve, rejected) => {
             if (!!socket) {
                 if (socket.disconnect)
                     socket.disconnect();
@@ -160,7 +160,7 @@ var WebSocket = require('ws');
         sendMessage(reqId, route, msg);
         callbacks[reqId] = cb;
         routeMap[reqId] = route;
-        console.log("request: route: " + route + " msg : " + JSON.stringify(msg));
+        console.log(`request: route: ${route} msg : ${JSON.stringify(msg)}`);
     };
     pomelo.notify = function (route, msg) {
         msg = msg || {};
@@ -169,9 +169,9 @@ var WebSocket = require('ws');
     pomelo.setReconnect = function (_reconnect) {
         reconnect = _reconnect;
     };
-    var defaultDecode = pomelo.decode = function (data) {
+    let defaultDecode = pomelo.decode = function (data) {
         //probuff decode
-        var msg = Message.decode(data);
+        let msg = Message.decode(data);
         if (!!msg.id && msg.id > 0) {
             msg.route = routeMap[msg.id];
             delete routeMap[msg.id];
@@ -182,33 +182,33 @@ var WebSocket = require('ws');
         msg.body = deCompose(msg);
         return msg;
     };
-    var defaultEncode = pomelo.encode = function (reqId, route, msg) {
-        var type = reqId ? Message.TYPE_REQUEST : Message.TYPE_NOTIFY;
+    let defaultEncode = pomelo.encode = function (reqId, route, msg) {
+        let type = reqId ? Message.TYPE_REQUEST : Message.TYPE_NOTIFY;
         //compress message by protobuf
         if (protobuf && clientProtos[route]) {
             msg = protobuf.encode(route, msg);
         }
         else if (decodeIO_encoder && decodeIO_encoder.lookup(route)) {
-            var Builder = decodeIO_encoder.build(route);
+            let Builder = decodeIO_encoder.build(route);
             msg = new Builder(msg).encodeNB();
         }
         else {
             msg = Protocol.strencode(JSON.stringify(msg));
         }
-        var compressRoute = 0;
+        let compressRoute = 0;
         if (dict && dict[route]) {
             route = dict[route];
             compressRoute = 1;
         }
         return Message.encode(reqId, type, compressRoute, route, msg);
     };
-    var connect = function (params, url) {
+    let connect = function (params, url) {
         console.log('connect to ' + url, params);
         maxReconnectAttempts = params.maxReconnectAttempts || DEFAULT_MAX_RECONNECT_ATTEMPTS;
         reconnectUrl = url;
         //Add protobuf version
         if (window.localStorage && window.localStorage.getItem('protos') && protoVersion === 0) {
-            var protos = JSON.parse(window.localStorage.getItem('protos'));
+            let protos = JSON.parse(window.localStorage.getItem('protos'));
             protoVersion = protos.version || 0;
             serverProtos = protos.server || {};
             clientProtos = protos.client || {};
@@ -229,28 +229,28 @@ var WebSocket = require('ws');
         socket.onerror = onerror;
         socket.onclose = onclose;
     };
-    var onopen = function (event) {
+    let onopen = function (event) {
         console.log('onSocketOpen:', event.type);
         if (!!reconnect) {
             pomelo.emit('reconnect');
         }
         reset();
-        var obj = Package.encode(Package.TYPE_HANDSHAKE, Protocol.strencode(JSON.stringify(handshakeBuffer)));
+        let obj = Package.encode(Package.TYPE_HANDSHAKE, Protocol.strencode(JSON.stringify(handshakeBuffer)));
         send(obj);
     };
-    var onmessage = function (event) {
+    let onmessage = function (event) {
         processPackage(Package.decode(event.data));
         // new package arrived, update the heartbeat timeout
         if (heartbeatTimeout) {
             nextHeartbeatTimeout = Date.now() + heartbeatTimeout;
         }
     };
-    var onerror = function (event) {
+    let onerror = function (event) {
         console.warn('socket error: ', event.message);
         pomelo.emit('io-error', event);
         initCallback(event);
     };
-    var onclose = function (event) {
+    let onclose = function (event) {
         console.warn('socket close: ', event.type);
         pomelo.emit('close', event);
         pomelo.emit('disconnect', event);
@@ -266,36 +266,36 @@ var WebSocket = require('ws');
             console.log("reconnection !", reconnect);
         }
     };
-    var reset = function () {
+    let reset = function () {
         reconnect = false;
         reconnectionDelay = 1000 * 5;
         reconnectAttempts = 0;
         clearTimeout(reconncetTimer);
     };
-    var sendMessage = function (reqId, route, msg) {
+    let sendMessage = function (reqId, route, msg) {
         if (useCrypto) {
             msg = JSON.stringify(msg);
-            var sig = rsa.signString(msg, "sha256");
+            let sig = rsa.signString(msg, "sha256");
             msg = JSON.parse(msg);
             msg['__crypto__'] = sig;
         }
         if (encode) {
             msg = encode(reqId, route, msg);
         }
-        var packet = Package.encode(Package.TYPE_DATA, msg);
+        let packet = Package.encode(Package.TYPE_DATA, msg);
         send(packet);
     };
-    var send = function (packet) {
+    let send = function (packet) {
         if (socket) {
             socket.send(packet.buffer);
         }
     };
-    var heartbeat = function (data) {
+    let heartbeat = function (data) {
         if (!heartbeatInterval) {
             // no heartbeat
             return;
         }
-        var obj = Package.encode(Package.TYPE_HEARTBEAT);
+        let obj = Package.encode(Package.TYPE_HEARTBEAT);
         if (heartbeatTimeoutId) {
             clearTimeout(heartbeatTimeoutId);
             heartbeatTimeoutId = null;
@@ -311,8 +311,8 @@ var WebSocket = require('ws');
             heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, heartbeatTimeout);
         }, heartbeatInterval);
     };
-    var heartbeatTimeoutCb = function () {
-        var gap = nextHeartbeatTimeout - Date.now();
+    let heartbeatTimeoutCb = function () {
+        let gap = nextHeartbeatTimeout - Date.now();
         if (gap > gapThreshold) {
             heartbeatTimeoutId = setTimeout(heartbeatTimeoutCb, gap);
         }
@@ -322,7 +322,7 @@ var WebSocket = require('ws');
             pomelo.disconnect();
         }
     };
-    var handshake = function (data) {
+    let handshake = function (data) {
         data = JSON.parse(Protocol.strdecode(data));
         if (data.code === RES_OLD_CLIENT) {
             pomelo.emit('error', 'client version not fullfill');
@@ -333,18 +333,18 @@ var WebSocket = require('ws');
             return;
         }
         handshakeInit(data);
-        var obj = Package.encode(Package.TYPE_HANDSHAKE_ACK);
+        let obj = Package.encode(Package.TYPE_HANDSHAKE_ACK);
         send(obj);
         initCallback(null);
     };
-    var onData = function (data) {
-        var msg = data;
+    let onData = function (data) {
+        let msg = data;
         if (decode) {
             msg = decode(msg);
         }
         processMessage(pomelo, msg);
     };
-    var onKick = function (data) {
+    let onKick = function (data) {
         data = JSON.parse(Protocol.strdecode(data));
         pomelo.emit('onKick', data);
     };
@@ -352,10 +352,10 @@ var WebSocket = require('ws');
     handlers[Package.TYPE_HEARTBEAT] = heartbeat;
     handlers[Package.TYPE_DATA] = onData;
     handlers[Package.TYPE_KICK] = onKick;
-    var processPackage = function (msgs) {
+    let processPackage = function (msgs) {
         if (Array.isArray(msgs)) {
-            for (var i = 0; i < msgs.length; i++) {
-                var msg = msgs[i];
+            for (let i = 0; i < msgs.length; i++) {
+                let msg = msgs[i];
                 handlers[msg.type](msg.body);
             }
         }
@@ -363,14 +363,14 @@ var WebSocket = require('ws');
             handlers[msgs.type](msgs.body);
         }
     };
-    var processMessage = function (pomelo, msg) {
+    let processMessage = function (pomelo, msg) {
         if (!msg.id) {
             // server push message
             pomelo.emit(msg.route, msg.body);
             return;
         }
         //if have a id then find the callback function with the request
-        var cb = callbacks[msg.id];
+        let cb = callbacks[msg.id];
         delete callbacks[msg.id];
         if (typeof cb !== 'function') {
             return;
@@ -378,13 +378,13 @@ var WebSocket = require('ws');
         cb(msg.body);
         return;
     };
-    var processMessageBatch = function (pomelo, msgs) {
-        for (var i = 0, l = msgs.length; i < l; i++) {
+    let processMessageBatch = function (pomelo, msgs) {
+        for (let i = 0, l = msgs.length; i < l; i++) {
             processMessage(pomelo, msgs[i]);
         }
     };
-    var deCompose = function (msg) {
-        var route = msg.route;
+    let deCompose = function (msg) {
+        let route = msg.route;
         //Decompose route from dict
         if (msg.compressRoute) {
             if (!abbrs[route]) {
@@ -402,7 +402,7 @@ var WebSocket = require('ws');
             return JSON.parse(Protocol.strdecode(msg.body));
         }
     };
-    var handshakeInit = function (data) {
+    let handshakeInit = function (data) {
         if (data.sys && data.sys.heartbeat) {
             heartbeatInterval = data.sys.heartbeat * 1000; // heartbeat interval
             heartbeatTimeout = heartbeatInterval * 2; // max heartbeat timeout
@@ -417,17 +417,17 @@ var WebSocket = require('ws');
         }
     };
     //Initilize data used in pomelo client
-    var initData = function (data) {
+    let initData = function (data) {
         if (!data || !data.sys) {
             return;
         }
         dict = data.sys.dict;
-        var protos = data.sys.protos;
+        let protos = data.sys.protos;
         //Init compress dict
         if (dict) {
             dict = dict;
             abbrs = {};
-            for (var route in dict) {
+            for (let route in dict) {
                 abbrs[dict[route]] = route;
             }
         }

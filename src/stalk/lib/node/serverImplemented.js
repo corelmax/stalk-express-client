@@ -1,51 +1,48 @@
 /**
- * Stalk-JavaScript, Node.js client. Supported react-native.
+ * Stalk-JavaScript, Node.js client. Supported express.js framework.
  * Support by@ nattapon.r@live.com
  *
  * Ahoo Studio.co.th
  */
 "use strict";
-var httpStatusCode_1 = require('../utils/httpStatusCode');
-var Pomelo = require('../pomelo/nodeWSClient');
-var Config = require(_global + '/stalk_config.json');
-var AuthenData = (function () {
-    function AuthenData() {
-    }
-    return AuthenData;
-}());
-var ServerImplemented = (function () {
-    function ServerImplemented() {
+const httpStatusCode_1 = require('../utils/httpStatusCode');
+const Pomelo = require('../pomelo/nodeWSClient');
+const Config = require(_global + '/stalk_config.json');
+class AuthenData {
+}
+class ServerImplemented {
+    constructor() {
         this._isConnected = false;
         this._isLogedin = false;
         this.connect = this.connectServer;
         console.log("serv imp. constructor");
     }
-    ServerImplemented.getInstance = function () {
+    static getInstance() {
         if (this.Instance === null || this.Instance === undefined) {
             this.Instance = new ServerImplemented();
         }
         return this.Instance;
-    };
-    ServerImplemented.prototype.getClient = function () {
-        var self = this;
+    }
+    getClient() {
+        let self = this;
         if (self.pomelo !== null) {
             return self.pomelo;
         }
         else {
             console.warn("disconnected.");
         }
-    };
-    ServerImplemented.prototype.dispose = function () {
+    }
+    dispose() {
         console.warn("dispose socket client.");
         this.disConnect();
         this.authenData = null;
         ServerImplemented.Instance = null;
-    };
-    ServerImplemented.prototype.disConnect = function (callBack) {
-        var self = this;
+    }
+    disConnect(callBack) {
+        let self = this;
         if (!!self.pomelo) {
             self.pomelo.removeAllListeners();
-            self.pomelo.disconnect().then(function () {
+            self.pomelo.disconnect().then(() => {
                 if (callBack)
                     callBack();
             });
@@ -54,62 +51,62 @@ var ServerImplemented = (function () {
             if (callBack)
                 callBack();
         }
-    };
-    ServerImplemented.prototype.logout = function () {
+    }
+    logout() {
         console.log('logout request');
-        var self = this;
-        var registrationId = "";
-        var msg = {};
+        let self = this;
+        let registrationId = "";
+        let msg = {};
         msg["username"] = this.username;
         msg["registrationId"] = registrationId;
         if (self.pomelo != null)
             self.pomelo.notify("connector.entryHandler.logout", msg);
         this.disConnect();
         self.pomelo = null;
-    };
-    ServerImplemented.prototype.init = function (callback) {
+    }
+    init(callback) {
         console.log('serverImp.init()');
-        var self = this;
+        let self = this;
         this._isConnected = false;
         self.pomelo = Pomelo;
         self.host = Config.Stalk.chat;
         self.port = parseInt(Config.Stalk.port);
         if (!!self.pomelo) {
             //<!-- Connecting gate server.
-            var params = { host: self.host, port: self.port, reconnect: false };
-            self.connectServer(params, function (err) {
+            let params = { host: self.host, port: self.port, reconnect: false };
+            self.connectServer(params, (err) => {
                 callback(err, self);
             });
         }
         else {
             console.warn("pomelo socket is un ready.");
         }
-    };
-    ServerImplemented.prototype.connectServer = function (params, callback) {
-        var self = this;
+    }
+    connectServer(params, callback) {
+        let self = this;
         console.log("socket connecting to: ", params);
         self.pomelo.init(params, function cb(err) {
             console.log("socket init result: ", err);
             callback(err);
         });
-    };
+    }
     // region <!-- Authentication...
     /// <summary>
     /// Connect to gate server then get query of connector server.
     /// </summary>
-    ServerImplemented.prototype.logIn = function (_username, _hash, deviceToken, callback) {
-        var self = this;
+    logIn(_username, _hash, deviceToken, callback) {
+        let self = this;
         if (!!self.pomelo && this._isConnected === false) {
-            var msg = { uid: _username };
+            let msg = { uid: _username };
             //<!-- Quering connector server.
             self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
                 console.log("QueryConnectorServ", JSON.stringify(result));
                 if (result.code === httpStatusCode_1.default.success) {
                     self.disConnect();
-                    var connectorPort = result.port;
+                    let connectorPort = result.port;
                     //<!-- Connecting to connector server.
-                    var params = { host: self.host, port: connectorPort, reconnect: true };
-                    self.connectServer(params, function (err) {
+                    let params = { host: self.host, port: connectorPort, reconnect: true };
+                    self.connectServer(params, (err) => {
                         self._isConnected = true;
                         if (!!err) {
                             callback(err, null);
@@ -127,7 +124,7 @@ var ServerImplemented = (function () {
         else {
             console.warn("pomelo client is null: connecting status %s", this._isConnected);
             console.log("Automatic init pomelo socket...");
-            self.init(function (err, res) {
+            self.init((err, res) => {
                 if (err) {
                     console.warn("Cannot starting pomelo socket!");
                     callback(err, null);
@@ -138,11 +135,11 @@ var ServerImplemented = (function () {
                 }
             });
         }
-    };
+    }
     //<!-- Authentication. request for token sign.
-    ServerImplemented.prototype.authenForFrontendServer = function (_username, _hash, deviceToken, callback) {
-        var self = this;
-        var msg = {};
+    authenForFrontendServer(_username, _hash, deviceToken, callback) {
+        let self = this;
+        let msg = {};
         msg["email"] = _username;
         msg["password"] = _hash;
         msg["registrationId"] = deviceToken;
@@ -168,19 +165,18 @@ var ServerImplemented = (function () {
                 }
             }
         });
-    };
-    ServerImplemented.prototype.gateEnter = function (uid) {
-        var _this = this;
-        var self = this;
-        var msg = { uid: uid };
-        return new Promise(function (resolve, rejected) {
-            if (!!self.pomelo && _this._isConnected === false) {
+    }
+    gateEnter(uid) {
+        let self = this;
+        let msg = { uid: uid };
+        return new Promise((resolve, rejected) => {
+            if (!!self.pomelo && this._isConnected === false) {
                 //<!-- Quering connector server.
                 self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
                     console.log("gateEnter", JSON.stringify(result));
                     if (result.code === httpStatusCode_1.default.success) {
                         self.disConnect();
-                        var data = { host: self.host, port: result.port };
+                        let data = { host: self.host, port: result.port };
                         resolve(data);
                     }
                     else {
@@ -189,15 +185,15 @@ var ServerImplemented = (function () {
                 });
             }
             else {
-                var message = "pomelo client is null: connecting status is " + self._isConnected;
+                let message = "pomelo client is null: connecting status is " + self._isConnected;
                 console.log("Automatic init pomelo socket...");
                 rejected(message);
             }
         });
-    };
-    ServerImplemented.prototype.connectorEnter = function (msg) {
-        var self = this;
-        return new Promise(function (resolve, rejected) {
+    }
+    connectorEnter(msg) {
+        let self = this;
+        return new Promise((resolve, rejected) => {
             //<!-- Authentication.
             self.pomelo.request("connector.entryHandler.login", msg, function (res) {
                 if (res.code === httpStatusCode_1.default.fail) {
@@ -214,17 +210,16 @@ var ServerImplemented = (function () {
                 }
             });
         });
-    };
-    ServerImplemented.prototype.TokenAuthen = function (tokenBearer, checkTokenCallback) {
-        var _this = this;
-        var self = this;
-        var msg = {};
+    }
+    TokenAuthen(tokenBearer, checkTokenCallback) {
+        let self = this;
+        let msg = {};
         msg["token"] = tokenBearer;
-        self.pomelo.request("gate.gateHandler.authenGateway", msg, function (result) {
-            _this.OnTokenAuthenticate(result, checkTokenCallback);
+        self.pomelo.request("gate.gateHandler.authenGateway", msg, (result) => {
+            this.OnTokenAuthenticate(result, checkTokenCallback);
         });
-    };
-    ServerImplemented.prototype.OnTokenAuthenticate = function (tokenRes, onSuccessCheckToken) {
+    }
+    OnTokenAuthenticate(tokenRes, onSuccessCheckToken) {
         if (tokenRes.code === httpStatusCode_1.default.success) {
             var data = tokenRes.data;
             var decode = data.decoded; //["decoded"];
@@ -236,18 +231,17 @@ var ServerImplemented = (function () {
             if (onSuccessCheckToken != null)
                 onSuccessCheckToken(tokenRes, null);
         }
-    };
-    ServerImplemented.prototype.kickMeAllSession = function (uid) {
-        var self = this;
+    }
+    kickMeAllSession(uid) {
+        let self = this;
         if (self.pomelo !== null) {
             var msg = { uid: uid };
             self.pomelo.request("connector.entryHandler.kickMe", msg, function (result) {
                 console.log("kickMe", JSON.stringify(result));
             });
         }
-    };
-    ServerImplemented.connectionProblemString = 'Server connection is unstable.';
-    return ServerImplemented;
-}());
+    }
+}
+ServerImplemented.connectionProblemString = 'Server connection is unstable.';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ServerImplemented;

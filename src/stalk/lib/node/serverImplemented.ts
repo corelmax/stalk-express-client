@@ -1,5 +1,5 @@
 ﻿/**
- * Stalk-JavaScript, Node.js client. Supported react-native.
+ * Stalk-JavaScript, Node.js client. Supported express.js framework.
  * Support by@ nattapon.r@live.com
  * 
  * Ahoo Studio.co.th 
@@ -327,6 +327,4 @@ export default class ServerImplemented {
             });
         }
     }
-
-    //<@--- ServerAPIProvider.
 }

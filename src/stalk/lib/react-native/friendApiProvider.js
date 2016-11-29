@@ -1,31 +1,30 @@
 "use strict";
-var serverImplemented_1 = require("./serverImplemented");
+const serverImplemented_1 = require("./serverImplemented");
 /**
  * FriendApiProvider
  */
-var FriendApiProvider = (function () {
-    function FriendApiProvider() {
+class FriendApiProvider {
+    constructor() {
         console.log("FriendApiProvider constructor");
     }
-    FriendApiProvider.getInstance = function () {
+    static getInstance() {
         if (!FriendApiProvider.instance) {
             FriendApiProvider.instance = new FriendApiProvider();
         }
         return FriendApiProvider.instance;
-    };
-    FriendApiProvider.prototype.friendRequest = function (token, myId, targetUid, callback) {
+    }
+    friendRequest(token, myId, targetUid, callback) {
         console.log('friendRequest', token);
-        var self = this;
-        var msg = {};
+        let self = this;
+        let msg = {};
         msg["token"] = token;
         msg["targetUid"] = targetUid;
-        serverImplemented_1.default.getInstance().pomelo.request("auth.userHandler.addFriend", msg, function (result) {
+        serverImplemented_1.default.getInstance().pomelo.request("auth.userHandler.addFriend", msg, (result) => {
             if (callback != null) {
                 callback(null, result);
             }
         });
-    };
-    return FriendApiProvider;
-}());
+    }
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = FriendApiProvider;

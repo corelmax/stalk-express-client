@@ -5,11 +5,11 @@
  * Ahoo Studio.co.th 
  */
 
-import HttpStatusCode from './utils/httpStatusCode';
-import TokenDecode from './utils/tokenDecode';
+import HttpStatusCode from '../utils/httpStatusCode';
+import TokenDecode from '../utils/tokenDecode';
 
 const Pomelo = require('../pomelo/webSocketClient');
-import Config from '../../configs/config';
+const Config = require(_global + '/stalk_config.json');
 
 
 export interface IDictionary {

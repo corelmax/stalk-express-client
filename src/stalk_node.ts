@@ -1,7 +1,7 @@
 import ServerImp, { IDictionary } from "./lib/node/serverImplemented";
 
 const stalk = ServerImp.getInstance();
-
+export type Dict = IDictionary;
 export function init(): Promise<ServerImp> {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {

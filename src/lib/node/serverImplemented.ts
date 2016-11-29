@@ -12,7 +12,7 @@ const Pomelo = require('../pomelo/nodeWSClient');
 const Config = require(_global + '/stalk_config.json');
 
 export interface IDictionary {
-    [k: string]: string;
+    [k: string]: any;
 }
 interface IAuthenData {
     userId: string;

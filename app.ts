@@ -55,7 +55,7 @@ app.use(function (err, req, res, next) {
 StalkFactory.init().then(stalk => {
   if (!stalk._isConnected) return;
 
-  let msg = {};
+  let msg: StalkFactory.Dict = {};
   msg["event"] = "LINK_REQUEST";
   msg["message"] = "test send message from express.js";
   msg["timestamp"] = new Date();

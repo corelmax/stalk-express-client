@@ -56,10 +56,10 @@ StalkFactory.init().then(stalk => {
   if (!stalk._isConnected) return;
 
   let msg: StalkFactory.Dict = {};
-  msg["event"] = "LINK_REQUEST";
+  msg["event"] = "Hello from exprees.js";
   msg["message"] = "test send message from express.js";
   msg["timestamp"] = new Date();
-  msg["members"] = ["5825989781f6cb1b5fbb396e", "582425ca0d731841dcf84e56", "582402787db849780682c63f"];
+  msg["members"] = ["5825989781f6cb1b5fbb396e", "582425ca0d731841dcf84e56", "582402787db849780682c63f", "58295774eeba393ac8c0bc66"];
 
   StalkFactory.pushMessage(msg);
 }).catch(err => {

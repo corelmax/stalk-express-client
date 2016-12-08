@@ -30,7 +30,7 @@ export default class WebSocketClient {
 }
 */
 "use strict";
-const WebSocket = require('ws');
+const WebSocket = require("ws");
 (function () {
     let JS_WS_CLIENT_TYPE = 'js-websocket';
     let JS_WS_CLIENT_VERSION = '0.0.1';

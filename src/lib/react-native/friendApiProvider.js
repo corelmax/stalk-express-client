@@ -4,14 +4,14 @@ const serverImplemented_1 = require("./serverImplemented");
  * FriendApiProvider
  */
 class FriendApiProvider {
-    constructor() {
-        console.log("FriendApiProvider constructor");
-    }
     static getInstance() {
         if (!FriendApiProvider.instance) {
             FriendApiProvider.instance = new FriendApiProvider();
         }
         return FriendApiProvider.instance;
+    }
+    constructor() {
+        console.log("FriendApiProvider constructor");
     }
     friendRequest(token, myId, targetUid, callback) {
         console.log('friendRequest', token);

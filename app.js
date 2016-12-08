@@ -7,11 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 global.window = global;
 global._global = __dirname;
-/// original WebSocket.
-/// https://github.com/websockets/ws
-/// https://davidwalsh.name/websocket
-const StalkFactory = require("./src/stalk_node");
-// import * as StalkFactory from "stalk-js/stalk_node";
+const StalkSample = require("./src/stalk_sample");
 var index = require('./routes/index');
 var users = require('./routes/users');
 var app = express();
@@ -42,15 +38,5 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-StalkFactory.init().then(stalk => {
-    if (!stalk._isConnected)
-        return;
-    let msg = {};
-    msg["event"] = "Hello from exprees.js";
-    msg["message"] = "test send message from express.js";
-    msg["timestamp"] = new Date();
-    msg["members"] = ["5825989781f6cb1b5fbb396e", "582425ca0d731841dcf84e56", "582402787db849780682c63f", "58295774eeba393ac8c0bc66"];
-    StalkFactory.pushMessage(msg);
-}).catch(err => {
-});
+StalkSample.init();
 module.exports = app;

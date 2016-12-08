@@ -5,7 +5,7 @@
  * Ahoo Studio.co.th
  */
 "use strict";
-const httpStatusCode_1 = require('../utils/httpStatusCode');
+const httpStatusCode_1 = require("../utils/httpStatusCode");
 const Pomelo = require('../pomelo/webSocketClient');
 const Config = require(_global + '/stalk_config.json');
 class AuthenData {

@@ -7,7 +7,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 global.window = global;
 global._global = __dirname;
-const StalkSample = require("./src/sample/node/stalk_sample");
+/// original WebSocket.
+/// https://github.com/websockets/ws
+/// https://davidwalsh.name/websocket
+const StalkFactory = require("./src/stalk_node");
+// import * as StalkFactory from "stalk-js/stalk_node";
 var index = require('./routes/index');
 var users = require('./routes/users');
 var app = express();
@@ -38,5 +42,5 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-StalkSample.init();
+StalkFactory.init();
 module.exports = app;

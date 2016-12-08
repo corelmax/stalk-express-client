@@ -15,7 +15,6 @@
     "pomelo-protobuf": "^0.4.0",
     "pomelo-protocol": "^0.1.6",
     "serve-favicon": "~2.3.0",
-    "stalk-js": "0.0.1",
     "ws": "^1.1.1"
   },
   "devDependencies": {

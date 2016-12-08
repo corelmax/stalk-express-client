@@ -8,7 +8,12 @@ var bodyParser = require('body-parser');
 global.window = global;
 global._global = __dirname;
 
-import * as StalkSample from "./src/sample/node/stalk_sample";
+
+/// original WebSocket.
+/// https://github.com/websockets/ws
+/// https://davidwalsh.name/websocket
+import * as StalkFactory from "./src/stalk_node";
+// import * as StalkFactory from "stalk-js/stalk_node";
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -48,6 +53,6 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-StalkSample.init();
+StalkFactory.init();
 
 module.exports = app;

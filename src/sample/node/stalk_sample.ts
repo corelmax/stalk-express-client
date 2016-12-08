@@ -3,7 +3,7 @@
 /// original WebSocket.
 /// https://github.com/websockets/ws
 /// https://davidwalsh.name/websocket
-import * as StalkFactory from "./stalk_node";
+import * as StalkFactory from "../../stalk_node";
 // import * as StalkFactory from "stalk-js/stalk_node";
 
 export async function init() {
@@ -14,7 +14,10 @@ export async function init() {
     return true;
 }
 
-export function call() {
+/**
+ * For test call api omly...
+ */
+export function testCall() {
     let msg: StalkFactory.Dict = {};
     msg["event"] = "Test api.";
     msg["message"] = "test api from express.js client.";
@@ -23,8 +26,18 @@ export function call() {
 
     StalkFactory.pushMessage(msg).catch((stalk: StalkFactory.Stalk) => {
         init().then(boo => {
-            if (boo) call();
+            if (boo) testCall();
         });
     });
 }
+
+export function push(msg: StalkFactory.Dict) {
+    StalkFactory.pushMessage(msg).catch((stalk: StalkFactory.Stalk) => {
+        init().then(boo => {
+            if (boo) push(msg);
+        });
+    });
+}
+
+
 

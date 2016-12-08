@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 /// original WebSocket.
 /// https://github.com/websockets/ws
 /// https://davidwalsh.name/websocket
-const StalkFactory = require("./stalk_node");
+const StalkFactory = require("../../stalk_node");
 // import * as StalkFactory from "stalk-js/stalk_node";
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -21,7 +21,10 @@ function init() {
     });
 }
 exports.init = init;
-function call() {
+/**
+ * For test call api omly...
+ */
+function testCall() {
     let msg = {};
     msg["event"] = "Test api.";
     msg["message"] = "test api from express.js client.";
@@ -30,8 +33,17 @@ function call() {
     StalkFactory.pushMessage(msg).catch((stalk) => {
         init().then(boo => {
             if (boo)
-                call();
+                testCall();
         });
     });
 }
-exports.call = call;
+exports.testCall = testCall;
+function push(msg) {
+    StalkFactory.pushMessage(msg).catch((stalk) => {
+        init().then(boo => {
+            if (boo)
+                push(msg);
+        });
+    });
+}
+exports.push = push;

@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 global.window = global;
 global._global = __dirname;
 
-import * as StalkSample from "./src/stalk_sample";
+import * as StalkSample from "./src/sample/node/stalk_sample";
 
 var index = require('./routes/index');
 var users = require('./routes/users');

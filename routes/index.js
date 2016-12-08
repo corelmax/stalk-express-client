@@ -1,10 +1,10 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
-const StalkSample = require("../src/stalk_sample");
+const StalkSample = require("../src/sample/node/stalk_sample");
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    StalkSample.call();
+    StalkSample.testCall();
     res.render('index', { title: 'Express' });
 });
 module.exports = router;

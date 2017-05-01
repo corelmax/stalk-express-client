@@ -1,6 +1,6 @@
 {
     "Stalk": {
-        "chat": "git.animation-genius.com",
+        "chat": "localhost",
         "port": 3050
     }
 }

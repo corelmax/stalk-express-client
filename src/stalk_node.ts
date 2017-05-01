@@ -17,7 +17,7 @@ function initStalk(): Promise<ServerImp> {
             console.log("Stalk init success.");
             stalk._isConnected = true;
 
-            stalk.pomelo.on('disconnect', function data(reason) {
+            stalk.pomelo.on("disconnect", function data(reason) {
                 stalk._isConnected = false;
             });
 

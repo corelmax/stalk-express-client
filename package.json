@@ -21,6 +21,8 @@
     "@types/node": "0.0.0",
     "@types/ws": "0.0.37",
     "nodemon": "^1.11.0",
-    "parse": "^1.9.2"
+    "parse": "^1.9.2",
+    "tslint": "^5.1.0",
+    "typescript": "^2.3.2"
   }
 }

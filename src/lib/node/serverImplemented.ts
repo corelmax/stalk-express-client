@@ -1,15 +1,15 @@
 ﻿/**
  * Stalk-JavaScript, Node.js client. Supported express.js framework.
  * Support by@ nattapon.r@live.com
- * 
- * Ahoo Studio.co.th 
+ *
+ * Ahoo Studio.co.th
  */
 
-import HttpStatusCode from '../utils/httpStatusCode';
-import TokenDecode from '../utils/tokenDecode';
+import HttpStatusCode from "../utils/httpStatusCode";
+import TokenDecode from "../utils/tokenDecode";
 
-const Pomelo = require('../pomelo/nodeWSClient');
-const Config = require(_global + '/stalk_config.json');
+const Pomelo = require("../pomelo/nodeWSClient");
+const Config = require(_global + "/stalk_config.json");
 
 export interface IDictionary {
     [k: string]: any;
@@ -23,7 +23,7 @@ class AuthenData implements IAuthenData {
     token: string;
 }
 export interface IPomeloParam {
-    host: string, port: number, reconnect: boolean
+    host: string; port: number; reconnect: boolean;
 }
 export interface PomeloClient {
     init(params, cb);
@@ -45,7 +45,7 @@ export default class ServerImplemented {
         return this.Instance;
     }
 
-    static connectionProblemString: string = 'Server connection is unstable.';
+    static connectionProblemString: string = "Server connection is unstable.";
 
     pomelo: PomeloClient;
     host: string;
@@ -95,7 +95,7 @@ export default class ServerImplemented {
     }
 
     public logout() {
-        console.log('logout request');
+        console.log("logout request");
 
         let self = this;
         let registrationId = "";
@@ -110,7 +110,7 @@ export default class ServerImplemented {
     }
 
     public init(callback: (err, res) => void) {
-        console.log('serverImp.init()');
+        console.log("serverImp.init()");
 
         let self = this;
         this._isConnected = false;
@@ -119,7 +119,7 @@ export default class ServerImplemented {
         self.host = Config.Stalk.chat;
         self.port = parseInt(Config.Stalk.port);
         if (!!self.pomelo) {
-            //<!-- Connecting gate server.
+            // <!-- Connecting gate server.
             let params: IPomeloParam = { host: self.host, port: self.port, reconnect: false };
             self.connectServer(params, (err) => {
                 callback(err, self);
@@ -150,7 +150,7 @@ export default class ServerImplemented {
 
         if (!!self.pomelo && this._isConnected === false) {
             let msg = { uid: _username };
-            //<!-- Quering connector server.
+            // <!-- Quering connector server.
             self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
 
                 console.log("QueryConnectorServ", JSON.stringify(result));
@@ -159,7 +159,7 @@ export default class ServerImplemented {
                     self.disConnect();
 
                     let connectorPort = result.port;
-                    //<!-- Connecting to connector server.
+                    // <!-- Connecting to connector server.
                     let params: IPomeloParam = { host: self.host, port: connectorPort, reconnect: true };
                     self.connectServer(params, (err) => {
                         self._isConnected = true;
@@ -196,7 +196,7 @@ export default class ServerImplemented {
         }
     }
 
-    //<!-- Authentication. request for token sign.
+    // <!-- Authentication. request for token sign.
     private authenForFrontendServer(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
         let self = this;
 
@@ -204,7 +204,7 @@ export default class ServerImplemented {
         msg["email"] = _username;
         msg["password"] = _hash;
         msg["registrationId"] = deviceToken;
-        //<!-- Authentication.
+        // <!-- Authentication.
         self.pomelo.request("connector.entryHandler.login", msg, function (res) {
             console.log("login response: ", JSON.stringify(res));
 
@@ -218,7 +218,7 @@ export default class ServerImplemented {
                     callback(null, res);
                 }
 
-                self.pomelo.on('disconnect', function data(reason) {
+                self.pomelo.on("disconnect", function data(reason) {
                     self._isConnected = false;
                 });
             }
@@ -236,7 +236,7 @@ export default class ServerImplemented {
         let msg = { uid: uid };
         return new Promise((resolve, rejected) => {
             if (!!self.pomelo && this._isConnected === false) {
-                //<!-- Quering connector server.
+                // <!-- Quering connector server.
                 self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
 
                     console.log("gateEnter", JSON.stringify(result));
@@ -276,7 +276,7 @@ export default class ServerImplemented {
         let self = this;
 
         return new Promise((resolve, rejected) => {
-            //<!-- Authentication.
+            // <!-- Authentication.
             self.pomelo.request("connector.entryHandler.login", msg, function (res) {
                 if (res.code === HttpStatusCode.fail) {
                     rejected(res.message);
@@ -284,7 +284,7 @@ export default class ServerImplemented {
                 else if (res.code === HttpStatusCode.success) {
                     resolve(res);
 
-                    self.pomelo.on('disconnect', function data(reason) {
+                    self.pomelo.on("disconnect", function data(reason) {
                         self._isConnected = false;
                     });
                 }
@@ -306,9 +306,9 @@ export default class ServerImplemented {
 
     private OnTokenAuthenticate(tokenRes: any, onSuccessCheckToken: (err, res) => void) {
         if (tokenRes.code === HttpStatusCode.success) {
-            var data = tokenRes.data;
-            var decode = data.decoded; //["decoded"];
-            var decodedModel: TokenDecode = JSON.parse(JSON.stringify(decode));
+            let data = tokenRes.data;
+            let decode = data.decoded; // ["decoded"];
+            let decodedModel: TokenDecode = JSON.parse(JSON.stringify(decode));
             if (onSuccessCheckToken != null)
                 onSuccessCheckToken(null, { success: true, username: decodedModel.email, password: decodedModel.password });
         }
@@ -321,7 +321,7 @@ export default class ServerImplemented {
     public kickMeAllSession(uid: string) {
         let self = this;
         if (self.pomelo !== null) {
-            var msg = { uid: uid };
+            let msg = { uid: uid };
             self.pomelo.request("connector.entryHandler.kickMe", msg, function (result) {
                 console.log("kickMe", JSON.stringify(result));
             });

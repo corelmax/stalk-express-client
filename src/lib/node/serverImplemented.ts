@@ -9,7 +9,7 @@ import HttpStatusCode from "../utils/httpStatusCode";
 import TokenDecode from "../utils/tokenDecode";
 
 const Pomelo = require("../pomelo/nodeWSClient");
-const Config = require(_global + "/stalk_config.json");
+const Config = require(dirname + "/stalk_config.json");
 
 export interface IDictionary {
     [k: string]: any;

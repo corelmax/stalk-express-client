@@ -6,7 +6,7 @@ let cookieParser = require("cookie-parser");
 let bodyParser = require("body-parser");
 
 global.window = global;
-global._global = __dirname;
+global.dirname = __dirname;
 
 
 /// original WebSocket.

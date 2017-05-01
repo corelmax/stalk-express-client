@@ -7,7 +7,7 @@
 "use strict";
 const httpStatusCode_1 = require("../utils/httpStatusCode");
 const Pomelo = require("../pomelo/nodeWSClient");
-const Config = require(_global + "/stalk_config.json");
+const Config = require(dirname + "/stalk_config.json");
 class AuthenData {
 }
 class ServerImplemented {

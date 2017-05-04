@@ -42,10 +42,18 @@ function pushMessage(msg) {
 }
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
-        let stalk = yield initStalk();
-        if (!stalk._isConnected)
+        try {
+            let stalk = yield initStalk();
+            if (!stalk._isConnected)
+                return false;
+            return true;
+        }
+        catch (ex) {
+            if (ex) {
+                console.error(ex.message);
+            }
             return false;
-        return true;
+        }
     });
 }
 exports.init = init;

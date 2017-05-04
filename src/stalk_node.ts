@@ -42,11 +42,20 @@ function pushMessage(msg: IDictionary): Promise<ServerImp> {
 }
 
 export async function init() {
-    let stalk = await initStalk();
+    try {
+        let stalk = await initStalk();
 
-    if (!stalk._isConnected) return false;
+        if (!stalk._isConnected) return false;
 
-    return true;
+        return true;
+    }
+    catch (ex) {
+        if (ex) {
+            console.error(ex.message);
+        }
+
+        return false;
+    }
 }
 
 /**

@@ -8,9 +8,9 @@ function initStalk(): Promise<ServerImp> {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {
             if (err) {
-                console.error("init stalk fail: ", err);
+                console.error("init stalk fail: ", err.message);
                 stalk._isConnected = false;
-                reject(err);
+                reject(err.message);
                 return;
             }
 
@@ -42,20 +42,15 @@ function pushMessage(msg: IDictionary): Promise<ServerImp> {
 }
 
 export async function init() {
-    try {
-        let stalk = await initStalk();
-
-        if (!stalk._isConnected) return false;
-
-        return true;
-    }
-    catch (ex) {
-        if (ex) {
-            console.error(ex.message);
+    initStalk().then(stalk => {
+        if (!stalk._isConnected) {
+            return false;
         }
 
+        return true;
+    }).catch(err => {
         return false;
-    }
+    });
 }
 
 /**
@@ -70,7 +65,9 @@ export function testCall() {
 
     pushMessage(msg).catch((stalk: ServerImp) => {
         init().then(boo => {
-            if (boo) testCall();
+            if (boo) {
+                testCall();
+            }
         });
     });
 }
@@ -78,7 +75,9 @@ export function testCall() {
 export function push(msg: IDictionary) {
     pushMessage(msg).catch((stalk: ServerImp) => {
         init().then(boo => {
-            if (boo) push(msg);
+            if (boo) {
+                push(msg);
+            }
         });
     });
 }

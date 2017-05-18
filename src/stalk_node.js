@@ -13,9 +13,9 @@ function initStalk() {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {
             if (err) {
-                console.error("init stalk fail: ", err);
+                console.error("init stalk fail: ", err.message);
                 stalk._isConnected = false;
-                reject(err);
+                reject(err.message);
                 return;
             }
             console.log("Stalk init success.");
@@ -42,18 +42,14 @@ function pushMessage(msg) {
 }
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            let stalk = yield initStalk();
-            if (!stalk._isConnected)
+        initStalk().then(stalk => {
+            if (!stalk._isConnected) {
                 return false;
-            return true;
-        }
-        catch (ex) {
-            if (ex) {
-                console.error(ex.message);
             }
+            return true;
+        }).catch(err => {
             return false;
-        }
+        });
     });
 }
 exports.init = init;
@@ -68,8 +64,9 @@ function testCall() {
     msg["members"] = "*";
     pushMessage(msg).catch((stalk) => {
         init().then(boo => {
-            if (boo)
+            if (boo) {
                 testCall();
+            }
         });
     });
 }
@@ -77,8 +74,9 @@ exports.testCall = testCall;
 function push(msg) {
     pushMessage(msg).catch((stalk) => {
         init().then(boo => {
-            if (boo)
+            if (boo) {
                 push(msg);
+            }
         });
     });
 }

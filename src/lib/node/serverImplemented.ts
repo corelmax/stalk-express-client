@@ -135,7 +135,9 @@ export default class ServerImplemented {
         console.log("socket connecting to: ", params);
 
         self.pomelo.init(params, function cb(err) {
-            console.log("socket init result: ", err);
+            if (err) {
+                console.warn("socket init result: ", err.message);
+            }
 
             callback(err);
         });
